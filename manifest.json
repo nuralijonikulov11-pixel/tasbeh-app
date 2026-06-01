@@ -2,7 +2,8 @@
   "name": "Islomiy Tasbeh",
   "short_name": "Tasbeh",
   "description": "Islomiy raqamli tasbeh va kunlik zikrlar ilovasi",
-  "start_url": "/",
+  "start_url": "/tasbeh-app/",
+  "scope": "/tasbeh-app/",
   "display": "standalone",
   "background_color": "#050F0A",
   "theme_color": "#050F0A",
@@ -10,18 +11,17 @@
   "lang": "uz",
   "icons": [
     {
-      "src": "icons/icon-192.png",
+      "src": "icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icons/icon-512.png",
+      "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     }
   ],
-  "categories": ["lifestyle", "utilities"],
-  "screenshots": []
+  "categories": ["lifestyle", "utilities"]
 }
