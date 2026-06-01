@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#050F0A">
+<title>Tasbeh — Islomiy Raqamli Tasbeh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Lateef:wght@300;400;500;600;700&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+:root {
+  --gold: #C8A84B;
+  --gold-light: #E5C878;
+  --gold-dim: rgba(200,168,75,0.18);
+  --gold-border: rgba(200,168,75,0.28);
+  --bg-deep: #050F0A;
+  --bg-dark: #091A11;
+  --bg-card: rgba(255,255,255,0.03);
+  --bg-card-hover: rgba(255,255,255,0.055);
+  --text-primary: rgba(255,255,255,0.92);
+  --text-secondary: rgba(255,255,255,0.52);
+  --text-muted: rgba(255,255,255,0.28);
+  --green-accent: #1A6B3C;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --nav-h: 72px;
+  --topbar-h: 58px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+html,body {
+  height:100%;
+  background:var(--bg-deep);
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  font-family:'Nunito',system-ui,sans-serif;
+  overscroll-behavior:none;
+}
+
+#app {
+  width:100%;
+  max-width:430px;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+  background: var(--bg-deep);
+  overflow:hidden;
+}
+
+/* Subtle background pattern */
+#app::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  max-width:430px;
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(26,107,60,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 80% 80%, rgba(200,168,75,0.06) 0%, transparent 50%);
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ── TOP BAR ── */
+.top-bar {
+  height: var(--topbar-h);
+  background: rgba(5,15,10,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 0 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--gold-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  flex-shrink: 0;
+}
+
+.app-logo {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.logo-icon {
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(135deg, var(--green-accent), #0d3d22);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--gold-border);
+  font-size: 15px;
+  color: var(--gold);
+}
+.app-title {
+  color: var(--gold);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.lang-bar { display:flex; gap:4px; }
+.lang-btn {
+  background: transparent;
+  border: 1px solid var(--gold-border);
+  color: rgba(200,168,75,0.5);
+  padding: 5px 11px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.lang-btn.active { background: var(--gold); color: var(--bg-deep); border-color: var(--gold); }
+.lang-btn:hover:not(.active) { border-color: var(--gold); color: var(--gold); }
+
+/* ── SCREENS ── */
+.screen {
+  display:none;
+  flex-direction:column;
+  flex:1;
+  overflow-y:auto;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+  padding-bottom: calc(var(--nav-h) + 8px);
+  position:relative;
+  z-index:1;
+}
+.screen.active { display:flex; }
+
+/* ── BOTTOM NAV ── */
+.bottom-nav {
+  height: var(--nav-h);
+  background: rgba(5,15,10,0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--gold-border);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 8px 10px;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 430px;
+  z-index: 100;
+}
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  padding: 8px 22px 6px;
+  border-radius: 14px;
+  transition: all 0.2s;
+  flex: 1;
+  user-select: none;
+}
+.nav-icon { font-size: 22px; color: rgba(200,168,75,0.3); transition: all 0.2s; }
+.nav-label { font-size: 10px; color: rgba(200,168,75,0.3); font-weight: 700; letter-spacing: 0.3px; transition: all 0.2s; }
+.nav-item.active .nav-icon, .nav-item.active .nav-label { color: var(--gold); }
+.nav-item:active { background: rgba(200,168,75,0.07); }
+
+/* ═══════════════════════════════
+   TASBIH SCREEN
+═══════════════════════════════ */
+.tasbih-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 20px 10px;
+  gap: 12px;
+}
+
+.dhikr-selector {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.dhikr-chip {
+  background: var(--bg-card);
+  border: 1px solid var(--gold-border);
+  color: rgba(200,168,75,0.5);
+  padding: 5px 13px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+  letter-spacing: 0.3px;
+}
+.dhikr-chip.active {
+  background: var(--gold-dim);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.dhikr-chip:hover:not(.active) { border-color: var(--gold); color: rgba(200,168,75,0.75); }
+
+.arabic-display {
+  text-align: center;
+  padding: 14px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--gold-border);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.arabic-text {
+  font-family: 'Amiri', 'Lateef', serif;
+  font-size: 36px;
+  color: var(--gold);
+  line-height: 1.4;
+  letter-spacing: 1px;
+  direction: rtl;
+}
+.arabic-text.big { font-size: 44px; }
+.transliteration {
+  font-size: 13px;
+  color: rgba(200,168,75,0.65);
+  font-style: italic;
+  letter-spacing: 0.5px;
+}
+.meaning {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* achieved banner */
+.goal-achieved-banner {
+  background: rgba(200,168,75,0.1);
+  border: 1px solid rgba(200,168,75,0.45);
+  border-radius: var(--radius-sm);
+  padding: 9px 18px;
+  text-align: center;
+  width: 100%;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.4s ease, padding 0.4s ease;
+}
+.goal-achieved-banner.show { max-height: 60px; opacity: 1; }
+.banner-text { font-size: 13px; color: var(--gold); font-weight: 700; }
+
+/* counter button */
+.counter-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 4px 0;
+}
+
+.counter-btn {
+  width: 158px;
+  height: 158px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 33%, #173d28, #091A11);
+  border: 2.5px solid var(--gold);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.2s;
+  box-shadow: 0 0 0 0 rgba(200,168,75,0.3), 0 12px 40px rgba(0,0,0,0.7), inset 0 1px 0 rgba(200,168,75,0.15);
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+  outline: none;
+}
+.counter-btn::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  border: 1px solid rgba(200,168,75,0.12);
+}
+.counter-btn:focus-visible {
+  box-shadow: 0 0 0 3px var(--gold), 0 12px 40px rgba(0,0,0,0.7);
+}
+.counter-btn:active { transform: scale(0.92); }
+.counter-btn.pulse { animation: pulseRing 0.38s ease-out; }
+@keyframes pulseRing {
+  0%   { box-shadow: 0 0 0 0 rgba(200,168,75,0.55), 0 12px 40px rgba(0,0,0,0.7), inset 0 1px 0 rgba(200,168,75,0.15); }
+  100% { box-shadow: 0 0 0 36px rgba(200,168,75,0), 0 12px 40px rgba(0,0,0,0.7), inset 0 1px 0 rgba(200,168,75,0.15); }
+}
+.count-number {
+  font-size: 54px;
+  font-weight: 800;
+  color: var(--gold);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.count-sub {
+  font-size: 11px;
+  color: rgba(200,168,75,0.5);
+  margin-top: 3px;
+  letter-spacing: 0.5px;
+}
+
+.achieved-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(200,168,75,0.12);
+  opacity: 0;
+  pointer-events: none;
+}
+.achieved-overlay.show { animation: achieveFlash 1.6s ease-out forwards; }
+@keyframes achieveFlash {
+  0%   { opacity:0; transform:scale(0.8); }
+  25%  { opacity:1; transform:scale(1.04); }
+  70%  { opacity:1; }
+  100% { opacity:0; transform:scale(1); }
+}
+.achieved-star { font-size: 46px; color: var(--gold); }
+
+/* Goal dots */
+.goal-indicator {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 300px;
+}
+.goal-dot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: rgba(200,168,75,0.12);
+  border: 1px solid rgba(200,168,75,0.22);
+  transition: background 0.25s, transform 0.2s;
+}
+.goal-dot.filled { background: var(--gold); transform: scale(1.1); }
+
+/* Controls */
+.controls-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.ctrl-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--gold-border);
+  color: var(--gold);
+  padding: 9px 16px;
+  border-radius: 22px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.ctrl-btn:active, .ctrl-btn:hover { background: var(--gold-dim); border-color: var(--gold); }
+
+.toggle-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--gold-border);
+  color: rgba(200,168,75,0.4);
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  font-family: inherit;
+}
+.toggle-btn.on { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); }
+.toggle-btn:hover { border-color: var(--gold); }
+
+.target-select {
+  background: var(--bg-card);
+  border: 1px solid var(--gold-border);
+  color: var(--gold);
+  padding: 9px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+.target-select option { background: #091A11; color: var(--gold); }
+.target-select:hover { border-color: var(--gold); }
+
+/* Total sessions */
+.session-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+.session-card {
+  flex: 1;
+  background: var(--bg-card);
+  border: 1px solid var(--gold-border);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  text-align: center;
+}
+.session-num { font-size: 20px; font-weight: 800; color: var(--gold); }
+.session-label { font-size: 10px; color: var(--text-secondary); margin-top: 2px; font-weight: 600; letter-spacing: 0.5px; }
+
+/* ═══════════════════════════════
+   DAILY SCREEN
+═══════════════════════════════ */
+.screen-header {
+  padding: 18px 16px 10px;
+  flex-shrink: 0;
+}
+.screen-title { font-size: 18px; font-weight: 800; color: var(--gold); }
+.screen-subtitle { font-size: 12px; color: var(--text-secondary); margin-top: 3px; }
+
+.dhikr-list { display:flex; flex-direction:column; padding: 0 12px 6px; }
+
+.dhikr-card {
+  background: var(--bg-card);
+  border: 1px solid var(--gold-border);
+  border-radius: var(--radius-md);
+  padding: 14px 14px 12px;
+  margin-bottom: 9px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.dhikr-card::after {
+  content:'';
+  position:absolute;
+  left:0; top:0; bottom:0;
+  width:3px;
+  background: var(--gold);
+  opacity:0;
+  transition: opacity 0.2s;
+}
+.dhikr-card:hover, .dhikr-card:active { background: var(--bg-card-hover); border-color: rgba(200,168,75,0.45); }
+.dhikr-card.completed::after { opacity:1; }
+
+.dhikr-card-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; }
+.dhikr-card-left { flex:1; min-width:0; }
+.dhikr-card-arabic {
+  font-family: 'Amiri', serif;
+  font-size: 24px;
+  color: var(--gold);
+  direction: rtl;
+  line-height: 1.3;
+}
+.dhikr-card-name { font-size: 12px; color: rgba(200,168,75,0.8); font-weight: 700; margin-top: 2px; }
+.dhikr-card-meaning { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+.dhikr-card-right { display:flex; align-items:center; gap:8px; flex-shrink:0; margin-left:10px; }
+
+.complete-badge {
+  background: var(--gold-dim);
+  color: var(--gold);
+  font-size: 10px;
+  padding: 3px 9px;
+  border-radius: 8px;
+  font-weight: 800;
+  white-space: nowrap;
+  border: 1px solid rgba(200,168,75,0.3);
+}
+
+.bell-btn {
+  background: transparent;
+  border: none;
+  font-size: 19px;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 8px;
+  transition: all 0.2s;
+  color: rgba(200,168,75,0.28);
+  line-height: 1;
+  display: flex;
+  align-items: center;
+}
+.bell-btn.active { color: var(--gold); }
+.bell-btn:hover { color: var(--gold); }
+
+.progress-wrap { display:flex; align-items:center; gap:9px; }
+.progress-track {
+  flex:1; height:6px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  border-radius: 4px;
+  transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  min-width: 2px;
+}
+.progress-label { font-size: 11px; color: rgba(200,168,75,0.6); min-width: 38px; text-align: right; font-weight: 700; }
+
+/* ═══════════════════════════════
+   SETTINGS SCREEN
+═══════════════════════════════ */
+.settings-wrap { padding: 0 12px; }
+
+.settings-section {
+  margin-bottom: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--gold-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.settings-section-title {
+  font-size: 10px;
+  font-weight: 800;
+  color: rgba(200,168,75,0.45);
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  padding: 12px 16px 6px;
+}
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 13px 16px;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  gap: 12px;
+}
+.setting-label { display:flex; flex-direction:column; gap:3px; }
+.setting-name { font-size: 13px; color: var(--text-primary); font-weight: 600; }
+.setting-desc { font-size: 11px; color: var(--text-muted); }
+
+/* Toggle switch */
+.toggle-switch {
+  width: 46px; height: 26px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 13px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.25s;
+  border: 1px solid rgba(200,168,75,0.18);
+  flex-shrink: 0;
+}
+.toggle-switch.on { background: rgba(200,168,75,0.35); border-color: rgba(200,168,75,0.55); }
+.toggle-knob {
+  width: 20px; height: 20px;
+  background: rgba(160,130,35,0.7);
+  border-radius: 50%;
+  position: absolute;
+  top: 2px; left: 2px;
+  transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+.toggle-switch.on .toggle-knob { left: 22px; background: var(--gold); }
+
+/* Memorial card */
+.memorial-card {
+  margin: 0 12px 14px;
+  background: linear-gradient(135deg, rgba(200,168,75,0.09) 0%, rgba(200,168,75,0.03) 100%);
+  border: 1px solid rgba(200,168,75,0.3);
+  border-radius: var(--radius-lg);
+  padding: 24px 18px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.memorial-card::before {
+  content: '';
+  position: absolute;
+  top: -30px; right: -30px;
+  width: 100px; height: 100px;
+  background: radial-gradient(circle, rgba(200,168,75,0.1), transparent);
+  border-radius: 50%;
+}
+.memorial-ornament { font-size: 26px; color: rgba(200,168,75,0.5); margin-bottom: 10px; }
+.memorial-arabic {
+  font-family: 'Amiri', serif;
+  font-size: 22px;
+  color: var(--gold);
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+.memorial-text { font-size: 14px; color: rgba(200,168,75,0.9); font-weight: 700; line-height: 1.6; }
+.memorial-dua { font-size: 11px; color: var(--text-secondary); margin-top: 10px; font-style: italic; line-height: 1.7; }
+
+/* ═══════════════════════════════
+   TOAST NOTIFICATIONS
+═══════════════════════════════ */
+#toast-container {
+  position: fixed;
+  top: calc(var(--topbar-h) + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  width: calc(100% - 32px);
+  max-width: 400px;
+  pointer-events: none;
+}
+.toast {
+  background: rgba(20,40,28,0.97);
+  border: 1px solid var(--gold-border);
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  font-size: 13px;
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 6px;
+  animation: toastIn 0.35s ease-out;
+  backdrop-filter: blur(16px);
+}
+@keyframes toastIn {
+  from { opacity:0; transform: translateY(-8px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+.toast.out { animation: toastOut 0.3s ease-in forwards; }
+@keyframes toastOut {
+  to { opacity:0; transform: translateY(-8px); }
+}
+
+/* scrollbar */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(200,168,75,0.2); border-radius: 2px; }
+</style>
+</head>
+<body>
+<div id="app" role="main">
+  <div class="top-bar" role="banner">
+    <div class="app-logo">
+      <div class="logo-icon" aria-hidden="true">☪</div>
+      <span class="app-title" id="appTitle">Islomiy Tasbeh</span>
+    </div>
+    <div class="lang-bar" role="group" aria-label="Til tanlash">
+      <button class="lang-btn active" onclick="setLang('uz')" aria-pressed="true" aria-label="O'zbek tili">UZ</button>
+      <button class="lang-btn" onclick="setLang('ru')" aria-pressed="false" aria-label="Rus tili">RU</button>
+      <button class="lang-btn" onclick="setLang('en')" aria-pressed="false" aria-label="Ingliz tili">EN</button>
+    </div>
+  </div>
+
+  <div id="toast-container" aria-live="polite"></div>
+
+  <!-- ══ TASBIH SCREEN ══ -->
+  <div class="screen active" id="screen-tasbih" role="region" aria-label="Tasbeh hisoblagich">
+    <div class="tasbih-wrap">
+      <div class="dhikr-selector" id="dhikrSelector" role="tablist" aria-label="Zikr tanlash"></div>
+
+      <div class="arabic-display">
+        <div class="arabic-text" id="arabicText" aria-label="Arabcha matn">سُبْحَانَ اللَّهِ</div>
+        <div class="transliteration" id="translit">Subhânallâh</div>
+        <div class="meaning" id="meaning">Alloh pok va nuqsondan xolidir</div>
+      </div>
+
+      <div class="goal-achieved-banner" id="achievedBanner" role="status">
+        <div class="banner-text" id="achievedText">🌟 Maqsadga erishildi! Barakalloh!</div>
+      </div>
+
+      <div class="counter-wrap">
+        <button
+          class="counter-btn"
+          id="counterBtn"
+          onclick="increment()"
+          onkeydown="handleCounterKey(event)"
+          aria-label="Zikr bosish (joriy: 0)"
+          tabindex="0"
+        >
+          <div class="count-number" id="countNum">0</div>
+          <div class="count-sub" id="countSub" aria-live="off">0/33</div>
+          <div class="achieved-overlay" id="achievedOverlay" aria-hidden="true">
+            <div class="achieved-star">✦</div>
+          </div>
+        </button>
+      </div>
+
+      <div class="goal-indicator" id="goalDots" aria-label="Maqsad ko'rsatgichi"></div>
+
+      <div class="controls-row">
+        <select class="target-select" id="targetSelect" onchange="updateTarget()" aria-label="Maqsad soni">
+          <option value="33">33</option>
+          <option value="99">99</option>
+          <option value="100">100</option>
+        </select>
+        <button class="ctrl-btn" onclick="resetCount()" aria-label="Hisobni nolga tushirish">
+          <i class="ti ti-refresh" aria-hidden="true"></i>
+          <span id="resetLabel">Qayta</span>
+        </button>
+        <button class="toggle-btn" id="soundBtn" onclick="toggleSound()" aria-label="Tovush" aria-pressed="false">
+          <i class="ti ti-volume" aria-hidden="true"></i>
+        </button>
+        <button class="toggle-btn" id="vibBtn" onclick="toggleVib()" aria-label="Tebranish" aria-pressed="false">
+          <i class="ti ti-device-mobile-vibration" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="session-row">
+        <div class="session-card">
+          <div class="session-num" id="totalSessions">0</div>
+          <div class="session-label" id="sessionsLabel">SEANLAR</div>
+        </div>
+        <div class="session-card">
+          <div class="session-num" id="totalToday">0</div>
+          <div class="session-label" id="todayLabel">BUGUN</div>
+        </div>
+        <div class="session-card">
+          <div class="session-num" id="totalAll">0</div>
+          <div class="session-label" id="totalLabel">JAMI</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ DAILY SCREEN ══ -->
+  <div class="screen" id="screen-daily" role="region" aria-label="Kunlik zikrlar">
+    <div class="screen-header">
+      <div class="screen-title" id="dailyTitle">Kunlik Zikrlar</div>
+      <div class="screen-subtitle" id="dailySubtitle">Bugungi saboqlar</div>
+    </div>
+    <div class="dhikr-list" id="dhikrList" role="list"></div>
+  </div>
+
+  <!-- ══ SETTINGS SCREEN ══ -->
+  <div class="screen" id="screen-settings" role="region" aria-label="Sozlamalar">
+    <div class="screen-header">
+      <div class="screen-title" id="settingsTitle">Sozlamalar</div>
+    </div>
+    <div class="settings-wrap">
+      <div class="settings-section">
+        <div class="settings-section-title" id="notifTitle">BILDIRISHNOMALAR</div>
+        <div class="setting-row">
+          <div class="setting-label">
+            <div class="setting-name" id="s1name">Bildirishnomalar</div>
+            <div class="setting-desc" id="s1desc">Kunlik eslatmalar</div>
+          </div>
+          <div class="toggle-switch on" id="sw1" onclick="toggleSwitch('sw1','notifications')" role="switch" aria-checked="true" tabindex="0"></div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-label">
+            <div class="setting-name" id="s2name">Audio eslatmalar</div>
+            <div class="setting-desc" id="s2desc">Ovozli signal</div>
+          </div>
+          <div class="toggle-switch" id="sw2" onclick="toggleSwitch('sw2','audio')" role="switch" aria-checked="false" tabindex="0"></div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-label">
+            <div class="setting-name" id="s3name">Tebranish</div>
+            <div class="setting-desc" id="s3desc">Vibratsiya rejimi</div>
+          </div>
+          <div class="toggle-switch on" id="sw3" onclick="toggleSwitch('sw3','vibration')" role="switch" aria-checked="true" tabindex="0">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title" id="displayTitle">KO'RINISH</div>
+        <div class="setting-row">
+          <div class="setting-label">
+            <div class="setting-name" id="s4name">Katta harflar</div>
+            <div class="setting-desc" id="s4desc">Arabcha matni kattalash</div>
+          </div>
+          <div class="toggle-switch on" id="sw4" onclick="toggleSwitch('sw4','bigArabic')" role="switch" aria-checked="true" tabindex="0">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-label">
+            <div class="setting-name" id="s5name">Maqsad yetganda signal</div>
+            <div class="setting-desc" id="s5desc">33/99/100 da eslatma</div>
+          </div>
+          <div class="toggle-switch on" id="sw5" onclick="toggleSwitch('sw5','goalSignal')" role="switch" aria-checked="true" tabindex="0">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">MA'LUMOTLAR</div>
+        <div class="setting-row">
+          <div class="setting-label">
+            <div class="setting-name" id="clearDataLabel">Barcha ma'lumotlarni o'chirish</div>
+            <div class="setting-desc" id="clearDataDesc">Hisoblagich va progressni tozalash</div>
+          </div>
+          <button class="ctrl-btn" onclick="clearAllData()" style="font-size:11px;padding:7px 12px;" id="clearBtn">
+            <i class="ti ti-trash" aria-hidden="true"></i>
+            <span id="clearBtnLabel">Tozalash</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="memorial-card">
+      <div class="memorial-ornament">☪</div>
+      <div class="memorial-arabic">اَلْفَاتِحَة</div>
+      <div class="memorial-text" id="memorialText">Rahmonov Joniqul ota ruhi poklariga bag'ishlanadi</div>
+      <div class="memorial-dua" id="memorialDua">Alloh rahmatiga olsin · Jannat bog'larida bo'lsin</div>
+    </div>
+  </div>
+
+  <!-- ══ BOTTOM NAV ══ -->
+  <nav class="bottom-nav" role="navigation" aria-label="Asosiy navigatsiya">
+    <div class="nav-item active" id="nav-tasbih" onclick="switchScreen('tasbih')" role="tab" aria-selected="true" tabindex="0" onkeydown="navKey(event,'tasbih')">
+      <i class="ti ti-circle-dot nav-icon" aria-hidden="true"></i>
+      <span class="nav-label" id="navLabel1">Tasbeh</span>
+    </div>
+    <div class="nav-item" id="nav-daily" onclick="switchScreen('daily')" role="tab" aria-selected="false" tabindex="0" onkeydown="navKey(event,'daily')">
+      <i class="ti ti-list-check nav-icon" aria-hidden="true"></i>
+      <span class="nav-label" id="navLabel2">Zikrlar</span>
+    </div>
+    <div class="nav-item" id="nav-settings" onclick="switchScreen('settings')" role="tab" aria-selected="false" tabindex="0" onkeydown="navKey(event,'settings')">
+      <i class="ti ti-settings nav-icon" aria-hidden="true"></i>
+      <span class="nav-label" id="navLabel3">Sozlama</span>
+    </div>
+  </nav>
+</div>
+
+<script>
+// ══════════════════════════════════════
+// TRANSLATIONS
+// ══════════════════════════════════════
+const T = {
+  uz: {
+    appTitle:"Islomiy Tasbeh", navLabel1:"Tasbeh", navLabel2:"Zikrlar", navLabel3:"Sozlama",
+    dailyTitle:"Kunlik Zikrlar", dailySubtitle:"Bugungi saboqlar", settingsTitle:"Sozlamalar",
+    notifTitle:"BILDIRISHNOMALAR", displayTitle:"KO'RINISH",
+    s1name:"Bildirishnomalar", s1desc:"Kunlik eslatmalar",
+    s2name:"Audio eslatmalar", s2desc:"Ovozli signal",
+    s3name:"Tebranish", s3desc:"Vibratsiya rejimi",
+    s4name:"Katta harflar", s4desc:"Arabcha matni kattalash",
+    s5name:"Maqsad yetganda signal", s5desc:"33/99/100 da eslatma",
+    resetLabel:"Qayta", tapLabel:"Bosing", completedLabel:"Bajarildi",
+    achievedText:"🌟 Maqsadga erishildi! Barakalloh!",
+    memorialText:"Rahmonov Joniqul ota ruhi poklariga bag'ishlanadi",
+    memorialDua:"Alloh rahmatiga olsin · Jannat bog'larida bo'lsin",
+    sessionsLabel:"SEANLAR", todayLabel:"BUGUN", totalLabel:"JAMI",
+    clearDataLabel:"Barcha ma'lumotlarni o'chirish", clearDataDesc:"Hisoblagich va progressni tozalash",
+    clearBtnLabel:"Tozalash", notifGranted:"Bildirishnomalar yoqildi!",
+    notifDenied:"Bildirishnomalar rad etildi.",
+    savedMsg:"Sozlamalar saqlandi.", clearedMsg:"Barcha ma'lumotlar tozalandi.",
+    goalSignal:"Maqsad yetdi!"
+  },
+  ru: {
+    appTitle:"Исламский Тасбих", navLabel1:"Тасбих", navLabel2:"Зикры", navLabel3:"Настройки",
+    dailyTitle:"Ежедневные Зикры", dailySubtitle:"Сегодняшний урок", settingsTitle:"Настройки",
+    notifTitle:"УВЕДОМЛЕНИЯ", displayTitle:"ОТОБРАЖЕНИЕ",
+    s1name:"Уведомления", s1desc:"Ежедневные напоминания",
+    s2name:"Аудио напоминания", s2desc:"Звуковой сигнал",
+    s3name:"Вибрация", s3desc:"Режим вибрации",
+    s4name:"Крупный шрифт", s4desc:"Увеличить арабский текст",
+    s5name:"Сигнал при цели", s5desc:"Напомнить при 33/99/100",
+    resetLabel:"Сброс", tapLabel:"Нажмите", completedLabel:"Готово",
+    achievedText:"🌟 Цель достигнута! Баракаллах!",
+    memorialText:"Посвящается светлой памяти Рахмонова Жоникул ота",
+    memorialDua:"Да смилуется над ним Аллах · Да пребудет в Раю",
+    sessionsLabel:"СЕАНСЫ", todayLabel:"СЕГОДНЯ", totalLabel:"ВСЕГО",
+    clearDataLabel:"Очистить все данные", clearDataDesc:"Сбросить счётчик и прогресс",
+    clearBtnLabel:"Очистить", notifGranted:"Уведомления включены!",
+    notifDenied:"Уведомления отклонены.",
+    savedMsg:"Настройки сохранены.", clearedMsg:"Все данные удалены.",
+    goalSignal:"Цель достигнута!"
+  },
+  en: {
+    appTitle:"Islamic Tasbih", navLabel1:"Tasbih", navLabel2:"Dhikr", navLabel3:"Settings",
+    dailyTitle:"Daily Dhikr & Goals", dailySubtitle:"Today's session", settingsTitle:"Settings",
+    notifTitle:"NOTIFICATIONS", displayTitle:"DISPLAY",
+    s1name:"Notifications", s1desc:"Daily reminders",
+    s2name:"Audio reminders", s2desc:"Sound alerts",
+    s3name:"Vibration", s3desc:"Vibration mode",
+    s4name:"Large text", s4desc:"Enlarge Arabic text",
+    s5name:"Goal signal", s5desc:"Alert at 33/99/100",
+    resetLabel:"Reset", tapLabel:"Tap", completedLabel:"Done",
+    achievedText:"🌟 Goal Achieved! Barakallah!",
+    memorialText:"Dedicated to the spirit of Rahmonov Joniqul Ota",
+    memorialDua:"May Allah have mercy on him · May he rest in Paradise",
+    sessionsLabel:"SESSIONS", todayLabel:"TODAY", totalLabel:"TOTAL",
+    clearDataLabel:"Clear all data", clearDataDesc:"Reset counter and progress",
+    clearBtnLabel:"Clear", notifGranted:"Notifications enabled!",
+    notifDenied:"Notifications denied.",
+    savedMsg:"Settings saved.", clearedMsg:"All data cleared.",
+    goalSignal:"Goal reached!"
+  }
+};
+
+// ══════════════════════════════════════
+// DEFAULT DHIKR DATA
+// ══════════════════════════════════════
+const DEFAULT_DHIKRS = [
+  {id:'subhanallah', ar:'سُبْحَانَ اللَّهِ', key:'Subhânallâh', uz:'Alloh pok va nuqsondan xolidir', ru:'Пречист Аллах', en:'Glory be to Allah', goal:33, done:0},
+  {id:'alhamdulillah', ar:'الْحَمْدُ لِلَّهِ', key:'Alhamdulillâh', uz:"Barcha maqtov Alloh'ga", ru:'Хвала Аллаху', en:'All praise is due to Allah', goal:33, done:0},
+  {id:'allahuakbar', ar:'اللَّهُ أَكْبَرُ', key:'Allâhu Akbar', uz:"Alloh eng Ulug'dir", ru:'Аллах Велик', en:'Allah is the Greatest', goal:33, done:0},
+  {id:'istighfar', ar:'أَسْتَغْفِرُ اللَّهَ', key:'Astaghfirullâh', uz:"Men Alloh'dan kechirim so'rayman", ru:'Прошу прощения у Аллаха', en:'I seek forgiveness from Allah', goal:100, done:0},
+  {id:'salawat', ar:'صَلَّى اللَّهُ عَلَيْهِ', key:'Sallallâhu alayhi', uz:"Alloh unga salovat yo'llasın", ru:'Да благословит его Аллах', en:"May Allah's blessings be upon him", goal:99, done:0}
+];
+
+// ══════════════════════════════════════
+// STATE — loaded from / saved to localStorage
+// ══════════════════════════════════════
+let lang = 'uz';
+let currentDhikrIdx = 0;
+let count = 0;
+let target = 33;
+let soundOn = false;
+let vibOn = false;
+let bells = {};
+let DHIKRS = [];
+let settings = { notifications: true, audio: false, vibration: true, bigArabic: true, goalSignal: true };
+let stats = { sessions: 0, today: 0, total: 0, lastDate: '' };
+let audioCtx = null;
+
+// ── LocalStorage helpers ──
+function saveState() {
+  try {
+    localStorage.setItem('tasbih_dhikrs', JSON.stringify(DHIKRS));
+    localStorage.setItem('tasbih_settings', JSON.stringify(settings));
+    localStorage.setItem('tasbih_stats', JSON.stringify(stats));
+    localStorage.setItem('tasbih_bells', JSON.stringify(bells));
+    localStorage.setItem('tasbih_lang', lang);
+    localStorage.setItem('tasbih_currentIdx', currentDhikrIdx);
+    localStorage.setItem('tasbih_count', count);
+    localStorage.setItem('tasbih_target', target);
+  } catch(e) {}
+}
+
+function loadState() {
+  try {
+    const d = localStorage.getItem('tasbih_dhikrs');
+    DHIKRS = d ? JSON.parse(d) : JSON.parse(JSON.stringify(DEFAULT_DHIKRS));
+    const s = localStorage.getItem('tasbih_settings');
+    if (s) settings = { ...settings, ...JSON.parse(s) };
+    const st = localStorage.getItem('tasbih_stats');
+    if (st) stats = { ...stats, ...JSON.parse(st) };
+    const b = localStorage.getItem('tasbih_bells');
+    if (b) bells = JSON.parse(b);
+    lang = localStorage.getItem('tasbih_lang') || 'uz';
+    currentDhikrIdx = parseInt(localStorage.getItem('tasbih_currentIdx') || '0');
+    count = parseInt(localStorage.getItem('tasbih_count') || '0');
+    target = parseInt(localStorage.getItem('tasbih_target') || '33');
+    // Reset today if new day
+    const today = new Date().toDateString();
+    if (stats.lastDate !== today) { stats.today = 0; stats.lastDate = today; }
+  } catch(e) {
+    DHIKRS = JSON.parse(JSON.stringify(DEFAULT_DHIKRS));
+  }
+}
+
+// ══════════════════════════════════════
+// AUDIO — Web Audio API
+// ══════════════════════════════════════
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function playClick() {
+  if (!soundOn) return;
+  try {
+    const ctx = getAudioCtx();
+    if (ctx.state === 'suspended') ctx.resume();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.08);
+    gain.gain.setValueAtTime(0.18, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.13);
+  } catch(e) {}
+}
+
+function playGoalSound() {
+  if (!soundOn) return;
+  try {
+    const ctx = getAudioCtx();
+    if (ctx.state === 'suspended') ctx.resume();
+    [523, 659, 784].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.15);
+      gain.gain.linearRampToValueAtTime(0.2, ctx.currentTime + i * 0.15 + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.15 + 0.35);
+      osc.start(ctx.currentTime + i * 0.15);
+      osc.stop(ctx.currentTime + i * 0.15 + 0.36);
+    });
+  } catch(e) {}
+}
+
+// ══════════════════════════════════════
+// VIBRATION
+// ══════════════════════════════════════
+function doVibrate(pattern) {
+  if (vibOn && navigator.vibrate) navigator.vibrate(pattern);
+}
+
+// ══════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════
+function showToast(msg) {
+  const tc = document.getElementById('toast-container');
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  tc.appendChild(el);
+  setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 350); }, 2200);
+}
+
+// ══════════════════════════════════════
+// LANGUAGE
+// ══════════════════════════════════════
+function setLang(l) {
+  lang = l;
+  document.documentElement.lang = l;
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    const pressed = b.getAttribute('onclick') === `setLang('${l}')`;
+    b.classList.toggle('active', pressed);
+    b.setAttribute('aria-pressed', pressed);
+  });
+  applyLang();
+  renderDhikrList();
+  updateDhikrDisplay();
+  updateCountDisplay();
+  applySwitchStates();
+  updateStatsDisplay();
+  saveState();
+}
+
+function applyLang() {
+  const t = T[lang];
+  for (const k in t) {
+    const el = document.getElementById(k);
+    if (el) el.textContent = t[k];
+  }
+}
+
+// ══════════════════════════════════════
+// DHIKR DISPLAY
+// ══════════════════════════════════════
+function updateDhikrDisplay() {
+  const d = DHIKRS[currentDhikrIdx];
+  document.getElementById('arabicText').textContent = d.ar;
+  document.getElementById('arabicText').className = 'arabic-text' + (settings.bigArabic ? ' big' : '');
+  document.getElementById('translit').textContent = d.key;
+  document.getElementById('meaning').textContent = d[lang] || d.uz;
+  renderGoalDots();
+  renderChips();
+}
+
+function renderChips() {
+  const sel = document.getElementById('dhikrSelector');
+  sel.innerHTML = '';
+  DHIKRS.forEach((d, i) => {
+    const chip = document.createElement('div');
+    chip.className = 'dhikr-chip' + (i === currentDhikrIdx ? ' active' : '');
+    chip.textContent = d.key.split(' ')[0];
+    chip.setAttribute('role', 'tab');
+    chip.setAttribute('aria-selected', i === currentDhikrIdx);
+    chip.setAttribute('tabindex', i === currentDhikrIdx ? '0' : '-1');
+    chip.setAttribute('aria-label', d.key);
+    chip.onclick = () => selectDhikr(i);
+    chip.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectDhikr(i); } };
+    sel.appendChild(chip);
+  });
+}
+
+function selectDhikr(i) {
+  currentDhikrIdx = i;
+  count = 0;
+  target = DHIKRS[i].goal;
+  // Sync target select
+  const sel = document.getElementById('targetSelect');
+  if ([33,99,100].includes(target)) sel.value = target;
+  else sel.value = 33;
+  updateDhikrDisplay();
+  updateCountDisplay();
+  document.getElementById('achievedBanner').classList.remove('show');
+  saveState();
+}
+
+function renderGoalDots() {
+  const dots = document.getElementById('goalDots');
+  dots.innerHTML = '';
+  const total = Math.min(target, 33);
+  const step = target / total;
+  for (let i = 0; i < total; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'goal-dot' + (count > i * step ? ' filled' : '');
+    dots.appendChild(dot);
+  }
+}
+
+// ══════════════════════════════════════
+// COUNTER
+// ══════════════════════════════════════
+function updateCountDisplay() {
+  document.getElementById('countNum').textContent = count;
+  document.getElementById('countSub').textContent = count + '/' + target;
+  const btn = document.getElementById('counterBtn');
+  btn.setAttribute('aria-label', (T[lang].tapLabel || 'Tap') + ' (joriy: ' + count + ')');
+  renderGoalDots();
+}
+
+function increment() {
+  if (count >= target) { count = 0; }
+  count++;
+
+  // Pulse animation
+  const btn = document.getElementById('counterBtn');
+  btn.classList.remove('pulse');
+  void btn.offsetWidth;
+  btn.classList.add('pulse');
+
+  // Sound & vibration on click
+  playClick();
+  doVibrate(30);
+
+  // Update dhikr done (cap at goal)
+  DHIKRS[currentDhikrIdx].done = Math.min(DHIKRS[currentDhikrIdx].done + 1, DHIKRS[currentDhikrIdx].goal);
+
+  updateCountDisplay();
+  updateStatsDisplay();
+
+  if (count === target) {
+    // Achieved!
+    const ov = document.getElementById('achievedOverlay');
+    ov.classList.add('show');
+    setTimeout(() => ov.classList.remove('show'), 1600);
+
+    if (settings.goalSignal) {
+      const bn = document.getElementById('achievedBanner');
+      bn.querySelector('#achievedText').textContent = T[lang].achievedText;
+      bn.classList.add('show');
+      setTimeout(() => bn.classList.remove('show'), 3200);
+    }
+
+    playGoalSound();
+    doVibrate([100, 60, 150]);
+
+    // Update stats
+    stats.sessions++;
+    stats.today++;
+    stats.total += target;
+    updateStatsDisplay();
+  }
+
+  saveState();
+  renderDhikrList();
+}
+
+function handleCounterKey(e) {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); increment(); }
+}
+
+function resetCount() {
+  count = 0;
+  document.getElementById('achievedBanner').classList.remove('show');
+  updateCountDisplay();
+  saveState();
+}
+
+function updateTarget() {
+  target = parseInt(document.getElementById('targetSelect').value);
+  count = 0;
+  document.getElementById('achievedBanner').classList.remove('show');
+  updateCountDisplay();
+  saveState();
+}
+
+// ══════════════════════════════════════
+// SOUND / VIB TOGGLES
+// ══════════════════════════════════════
+function toggleSound() {
+  soundOn = !soundOn;
+  const btn = document.getElementById('soundBtn');
+  btn.classList.toggle('on', soundOn);
+  btn.setAttribute('aria-pressed', soundOn);
+  // Init audio ctx on first user gesture
+  if (soundOn) { try { getAudioCtx(); } catch(e) {} }
+  saveState();
+}
+
+function toggleVib() {
+  vibOn = !vibOn;
+  const btn = document.getElementById('vibBtn');
+  btn.classList.toggle('on', vibOn);
+  btn.setAttribute('aria-pressed', vibOn);
+  if (vibOn) doVibrate(60);
+  saveState();
+}
+
+// ══════════════════════════════════════
+// SETTINGS TOGGLES — real state
+// ══════════════════════════════════════
+function toggleSwitch(id, key) {
+  const el = document.getElementById(id);
+  const isOn = el.classList.toggle('on');
+  if (!el.querySelector('.toggle-knob')) {
+    const knob = document.createElement('div');
+    knob.className = 'toggle-knob';
+    el.appendChild(knob);
+  }
+  el.setAttribute('aria-checked', isOn);
+
+  if (key) {
+    settings[key] = isOn;
+
+    if (key === 'notifications' && isOn) {
+      requestNotificationPermission();
+    }
+    if (key === 'bigArabic') {
+      document.getElementById('arabicText').className = 'arabic-text' + (isOn ? ' big' : '');
+    }
+    if (key === 'vibration') {
+      vibOn = isOn;
+      document.getElementById('vibBtn').classList.toggle('on', isOn);
+      if (isOn) doVibrate(60);
+    }
+    if (key === 'audio') {
+      soundOn = isOn;
+      document.getElementById('soundBtn').classList.toggle('on', isOn);
+    }
+  }
+
+  showToast(T[lang].savedMsg);
+  saveState();
+}
+
+function applySwitchStates() {
+  const map = { sw1:'notifications', sw2:'audio', sw3:'vibration', sw4:'bigArabic', sw5:'goalSignal' };
+  for (const [id, key] of Object.entries(map)) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+    el.classList.toggle('on', !!settings[key]);
+    el.setAttribute('aria-checked', !!settings[key]);
+    if (!el.querySelector('.toggle-knob')) {
+      const knob = document.createElement('div');
+      knob.className = 'toggle-knob';
+      el.appendChild(knob);
+    }
+  }
+  // Sync sound/vib buttons
+  soundOn = settings.audio;
+  vibOn = settings.vibration;
+  document.getElementById('soundBtn').classList.toggle('on', soundOn);
+  document.getElementById('soundBtn').setAttribute('aria-pressed', soundOn);
+  document.getElementById('vibBtn').classList.toggle('on', vibOn);
+  document.getElementById('vibBtn').setAttribute('aria-pressed', vibOn);
+}
+
+// ══════════════════════════════════════
+// NOTIFICATIONS
+// ══════════════════════════════════════
+function requestNotificationPermission() {
+  if (!('Notification' in window)) {
+    showToast(T[lang].notifDenied);
+    return;
+  }
+  Notification.requestPermission().then(perm => {
+    if (perm === 'granted') {
+      showToast(T[lang].notifGranted);
+      scheduleReminder();
+    } else {
+      showToast(T[lang].notifDenied);
+      settings.notifications = false;
+      const sw1 = document.getElementById('sw1');
+      sw1.classList.remove('on');
+      sw1.setAttribute('aria-checked', 'false');
+    }
+    saveState();
+  });
+}
+
+function scheduleReminder() {
+  // Simple once-a-day reminder via Notification API if page is open
+  if (Notification.permission === 'granted') {
+    new Notification('Islomiy Tasbeh', {
+      body: T[lang].dailyTitle + ' — ' + T[lang].dailySubtitle,
+      icon: ''
+    });
+  }
+}
+
+// ══════════════════════════════════════
+// STATS
+// ══════════════════════════════════════
+function updateStatsDisplay() {
+  document.getElementById('totalSessions').textContent = stats.sessions;
+  document.getElementById('totalToday').textContent = stats.today;
+  document.getElementById('totalAll').textContent = stats.total;
+}
+
+// ══════════════════════════════════════
+// DAILY LIST
+// ══════════════════════════════════════
+function renderDhikrList() {
+  const list = document.getElementById('dhikrList');
+  list.innerHTML = '';
+  DHIKRS.forEach((d, i) => {
+    const pct = Math.round((d.done / d.goal) * 100);
+    const done = d.done >= d.goal;
+    const card = document.createElement('div');
+    card.className = 'dhikr-card' + (done ? ' completed' : '');
+    card.setAttribute('role', 'listitem');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-label', d.key + ', ' + d.done + '/' + d.goal);
+    card.innerHTML = `
+      <div class="dhikr-card-top">
+        <div class="dhikr-card-left">
+          <div class="dhikr-card-arabic">${d.ar}</div>
+          <div class="dhikr-card-name">${d.key}</div>
+          <div class="dhikr-card-meaning">${d[lang] || d.uz}</div>
+        </div>
+        <div class="dhikr-card-right">
+          ${done ? `<span class="complete-badge">${T[lang].completedLabel}</span>` : ''}
+          <button class="bell-btn${bells[d.id] ? ' active' : ''}"
+            aria-label="Eslatma" aria-pressed="${!!bells[d.id]}"
+            onclick="toggleBell('${d.id}',event)">
+            <i class="ti ti-bell" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-track">
+          <div class="progress-fill" style="width:${pct}%"></div>
+        </div>
+        <div class="progress-label">${d.done}/${d.goal}</div>
+      </div>
+    `;
+    card.onclick = () => {
+      selectDhikr(i);
+      switchScreen('tasbih');
+    };
+    card.onkeydown = (e) => { if (e.key === 'Enter') { selectDhikr(i); switchScreen('tasbih'); } };
+    list.appendChild(card);
+  });
+}
+
+function toggleBell(id, e) {
+  e.stopPropagation();
+  bells[id] = !bells[id];
+  if (bells[id] && settings.notifications && Notification.permission === 'granted') {
+    showToast('🔔 ' + id);
+  }
+  saveState();
+  renderDhikrList();
+}
+
+// ══════════════════════════════════════
+// CLEAR DATA
+// ══════════════════════════════════════
+function clearAllData() {
+  if (!confirm(T[lang].clearDataLabel + '?')) return;
+  DHIKRS = JSON.parse(JSON.stringify(DEFAULT_DHIKRS));
+  stats = { sessions: 0, today: 0, total: 0, lastDate: new Date().toDateString() };
+  bells = {};
+  count = 0;
+  currentDhikrIdx = 0;
+  target = 33;
+  saveState();
+  updateCountDisplay();
+  updateDhikrDisplay();
+  updateStatsDisplay();
+  renderDhikrList();
+  showToast(T[lang].clearedMsg);
+}
+
+// ══════════════════════════════════════
+// SCREEN SWITCHING
+// ══════════════════════════════════════
+function switchScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => {
+    n.classList.remove('active');
+    n.setAttribute('aria-selected', 'false');
+  });
+  document.getElementById('screen-' + name).classList.add('active');
+  const navEl = document.getElementById('nav-' + name);
+  navEl.classList.add('active');
+  navEl.setAttribute('aria-selected', 'true');
+  if (name === 'daily') renderDhikrList();
+}
+
+function navKey(e, name) {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); switchScreen(name); }
+}
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+loadState();
+setLang(lang);
+updateCountDisplay();
+updateStatsDisplay();
+applySwitchStates();
+updateDhikrDisplay();
+</script>
+<script>if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js");</script>
+</body>
+</html>
